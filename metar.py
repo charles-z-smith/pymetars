@@ -8,13 +8,16 @@ EASTERN = timezone("US/Eastern")
 CENTRAL = timezone("US/Central")
 
 class MetarSimpleSite(object):
+    """Takes in lat lon as floats and ID as a string"""
     def __init__(self, params):
         self.__id__ = params[0]
         self.__latitude__ = params[1]
         self.__longitude__ = params[2]
         self.__timezone__ = params[3]
+    """Returns the lat as float"""
     def getLatitude(self):
         return self.__latitude__
+    """Returns the long as float"""
     def getLongitude(self):
         return self.__longitude__
     def getID(self):

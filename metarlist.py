@@ -16,7 +16,9 @@ class MetarList(object):
             for i in data:
                 if(len(i) == 84):
                     temp = i.decode("utf-8")
-                    self.__metarSites__[temp[20:24]] = MetarSite([temp[0:2], temp[3:19].strip(),temp[20:24],temp[39:45],temp[47:54]])
+                    lat = self.__convertLatLon__(temp[39:45])
+                    lon = self.__convertLatLon__(temp[47:54])
+                    self.__metarSites__[temp[20:24]] = MetarSite([temp[0:2], temp[3:19].strip(),temp[20:24],lat,lon])
         else:
             with open(localDir,"r") as f:
                 data = f.readlines()
@@ -24,9 +26,21 @@ class MetarList(object):
                 for i in data:
                     if(len(i) == 84):
                         temp = i
-                        self.__metarSites__[temp[20:24]] = MetarSite([temp[0:2], temp[3:19].strip(),temp[20:24],temp[39:45],temp[47:54]])                    
+                        lat = self.convertLatLon(temp[39:45])
+                        lon = self.convertLatLon(temp[47:54])
+                        self.__metarSites__[temp[20:24]] = MetarSite([temp[0:2], temp[3:19].strip(),temp[20:24],lat,lon])                    
 
+    def __convertLatLon__(self, latlon):
+        sign = ""
+        if latlon.endswith("S") or latlon.endswith("W"):
+            sign = "-"
+        latlon = latlon.rstrip("S")
+        latlon = latlon.rstrip("W")
+        latlon = latlon.rstrip("N")
+        latlon = latlon.rstrip("E")
+        latlon = latlon.split()
 
+        return (float(sign + latlon[0] + "." + latlon[1]))
     def __str__(self):
         ret = ""
         for i in self.__metarSites__:
@@ -38,6 +52,7 @@ class MetarList(object):
     """Return Metar specifications if a Site ID is found,  if not will return None"""
     def getSite(self, siteId):
         return self.__metarSites__.get(siteId)
+    """Takes in a string parameter, returns any areas which contain that string parameter"""
     def getLocation(self, location):
         locations = []
         for i in self.__metarSites__:
@@ -73,7 +88,6 @@ class MetarList(object):
         ftp.login()
         ftp.cwd("/data/observations/metar/cycles/")
         hour = []
-        print(utcnow.hour)
         ftp.retrlines("RETR " + "%02d"%(utcnow.hour) + "Z.TXT", hour.append)
         self.__setHour__(utcnow.hour,hour)
         ftp.close()
