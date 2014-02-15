@@ -31,9 +31,9 @@ class MetarSimpleSite(object):
 class MetarSite(MetarSimpleSite):
     """May be able to set the timezone off the constructor if we're able to build a databse of metar sites and their appropriate timezones"""
     def __init__(self, idProfile):
-        MetarSimpleSite.__init__(self, [idProfile[2], idProfile[3], idProfile[4], None])
-        self.id =idProfile[2]
-        self.__state__ = idProfile[0]
+        MetarSimpleSite.__init__(self, [idProfile[0], idProfile[4], idProfile[5], None])
+        self.id =idProfile[0]
+        self.__stateProv__ = idProfile[0]
         self.__name__ = idProfile[1]
         self.codedMetar = 0
         self.obCurrent = []
@@ -41,19 +41,19 @@ class MetarSite(MetarSimpleSite):
         self.__decodedobHistory__ = [[None] * 15]*24
     """This is where the metar is set.  We want a datetime string to move through here as well"""
     def __str__(self):
-        ret= ("ID: " + idProfile[2] +"\n" +
-                "State: " + idProfile[0]+"\n" +
-                "Name : " + idProfile[1]+"\n" +
-                "Lat : " + idProfile[3] + "\n" +
-                "Lon : " + idProfile[4] + "\n")
-        for i in decodedObHistory:
+        ret= ("ID: " + self.__id__ +"\n" +
+                "State: " + self.__stateProv__+"\n" +
+                "Name : " + self.__name__+"\n" +
+                "Lat : " + str(self.__latitude__) + "\n" +
+                "Lon : " + str(self.__longitude__) + "\n")
+        for i in self.__decodedObHistory__:
             ret = ret + str(i)
         return ret
                 
     def __setHour__(self, utcHour, obs):
         self.__codedobHistory__[utcHour] = obs
     def getState(self):
-        return self.__state__
+        return self.__stateProv__
     def getName(self):
         return self.__name__
     def getCodedHour(self, utcHour):
