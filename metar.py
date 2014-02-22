@@ -49,9 +49,14 @@ class MetarSite(MetarSimpleSite):
         for i in self.__decodedObHistory__:
             ret = ret + str(i)
         return ret
-                
     def __setHour__(self, utcHour, obs):
         self.__codedobHistory__[utcHour] = obs
+    """Returns a boolean value, True if coded obs exsist in __decodedobHistory, False otherwise."""
+    def obsInserted(self):
+        for ob in self.__codedobHistory__:
+            if ob != None:
+                return True
+        return False
     def getState(self):
         return self.__stateProv__
     def getName(self):
@@ -80,6 +85,8 @@ class MetarSite(MetarSimpleSite):
         if ob != None:
             if "AUTO" in ob:
                 j[0] = True
+            else:
+                j[0] = False
             m = re.search("T(\d{8})",ob)
             if m:
                 j[1] = metardecoder.decTempString(m.group(0)[1:5])

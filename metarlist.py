@@ -7,6 +7,7 @@ from datetime import datetime as __datetime__
 """Create a large set of MetarSites based off the id, name, state/providence, country, lat and lon"""
 class MetarList(object):
     def __init__(self):
+        self.__llconvert__ = LatLonConversions()
         self.__metarSites__ = {}
         direc = os.getcwd()
         with open(direc + "/metar2.tbl.txt","r") as f:
@@ -80,6 +81,39 @@ class MetarList(object):
                 retSites[site] = siteObj
 
         return retSites
+    """This method will ensure all sites within the sites dictionary will be at least the distance arguement from each other.
+        If a site lies below the distance threshold it's removed from the dictionary.
+        Worst case O(n^2)."""
+    def sitesSpacedBy(self, distanceKm, siteDic):
+        count = 0
+        keys = list(siteDic.keys())
+        while count != len(keys):
+            compSite = siteDic.get(keys[count])
+            icount = count+1
+            while icount !=len(keys):
+                otherSite = siteDic.get(keys[icount])
+                distance = self.__llconvert__.distance(compSite.getLatitude(),compSite.getLongitude(),
+                                                   otherSite.getLatitude(), otherSite.getLongitude())
+                if distance <= distanceKm:
+                    del(keys[icount])
+                    del(siteDic[otherSite.getID()])
+                else:#only increment if we don't delete
+                    icount +=1
+            count +=1
+        return siteDic
+    """Removes sites with empty observations, useful if we want to display data, but don't want an empty site to remove
+        sites with data in the above method"""
+    def removeEmptySites(self, siteDic):
+        count = 0
+        keys = list(siteDic.keys())
+        while count != len(keys):
+            site = siteDic.get(keys[count])
+            if not site.obsInserted():#if no observations in 24 hours, remove it from dictionary.
+                del(keys[count])
+                del(siteDic[site.getID()])
+            else:#only increment if we don't delete
+                count +=1
+        return siteDic
     """Downloads cycle from nws ftp server"""         
     def downloadCycle(self):
         ftp = __FTP__("tgftp.nws.noaa.gov")
