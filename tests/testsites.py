@@ -1,7 +1,7 @@
 from metars import metarlist
 from datetime import datetime
-
-
+import os
+"""Will changes this to unit tests in the future"""
 def testMetarList():
     test = metarlist.MetarList()
 def testMetarListLoad():
@@ -61,20 +61,11 @@ def testDownloadCycle():
 
 
 testMetarList()
-print("Test List")
 testMetarListLoad()
-print("Test List Load")
 testGetBounded()
-print("Test Bounded")
 testRemoveEmpty()
-print("Test Remove Empty")
 testNone()
-print("Test None")
 testOne()
-print("Test One")
 testDownloadCurrent()
-print("Test download current")
 testLoadCurrent()
-print("Test Load current")
 testDownloadCycle()
-print("Test Download Cycle")

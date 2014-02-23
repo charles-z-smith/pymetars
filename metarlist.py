@@ -9,8 +9,8 @@ class MetarList(object):
     def __init__(self):
         self.__llconvert__ = LatLonConversions()
         self.__metarSites__ = {}
-        direc = os.getcwd()
-        with open(direc + "/metar2.tbl.txt","r") as f:
+        direc = os.path.dirname(os.path.realpath(__file__))
+        with open(direc + "/" + "metar2.tbl.txt","r") as f:
             data = f.readlines()
             f.close()
             for i in data:
