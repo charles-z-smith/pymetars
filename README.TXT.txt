@@ -7,8 +7,7 @@ It also requires the pytz module for dealing with timezones
 Example Usage:
 
 >>> import metars.metarlist
->>> mlst = metars.metarlist.MetarList()#Download stationlist from "http://weather.rap.ucar.edu/surface/stations.txt"
->>> mlst = metars.metarlist.MetarList("C:/Python32/Lib/site-packages/metars/tests/stations.txt")#load it in from a local directory
+>>> mlst = metars.metarlist.MetarList()#loads data from the local file in the pack directory /pymetars/metar2.tbl.txt
 >>> mlst.downloadCycle()#download the latest 24 hours of metar data
 >>> site = mlst.getSite("KMKE")# get a site
 >>> site.getCodedHistory()#get the last 24 hours of coded metar data
@@ -35,12 +34,6 @@ Example Usage:
 '1.94'
 >>> site.getState()
 'WI'
->>> site.getLongitude()
-'087 54W'
->>> site.getLatitude()
-'42 57N'
->>> 
-
 
 
 
@@ -50,5 +43,4 @@ I am going to put out some future upgrade to work with basemap,  but this is a p
 
 
 Comments:
-This is my first python package, so if you have any comments of suggestions, please email me
-czacmith ... gmail.com
+If you have any suggestions for improvements, feel free to throw them my way.
