@@ -1,4 +1,5 @@
 from metars.metar import MetarSite
+from heapq import heappush, heappop
 import os
 from metars.latlonconversions import LatLonConversions
 from ftplib import FTP as __FTP__
@@ -114,6 +115,24 @@ class MetarList(object):
             else:#only increment if we don't delete
                 count +=1
         return siteDic
+    """Finds the n closest sites to the Metar Site object.
+    takes in a MetarSite object, an integer n.
+    returns a dictionary of the n closest MetarSites to the arguement MetarSite.
+    Runs O(n)"""
+    def findClosestSites(self, metarSite, n):
+        heap = []
+        retDic = {}
+        for site in self.__metarSites__:
+            otherSite = self.__metarSites__.get(site)
+            otherSite.distanceFrom(self.__llconvert__, metarSite)
+            heappush(heap, otherSite)
+        count = 0
+        while count != n:
+            site = heappop(heap)
+            if site.getID() != metarSite.getID():# no performance enhancement comparing memory address vs 4 characters.
+                retDic[site.getID()] = site
+                count +=1
+        return retDic
     """Downloads cycle from nws ftp server"""         
     def downloadCycle(self):
         ftp = __FTP__("tgftp.nws.noaa.gov")

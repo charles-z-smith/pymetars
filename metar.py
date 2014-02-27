@@ -1,4 +1,3 @@
-from ftplib import FTP
 from datetime import datetime
 import metars.metardecoder as metardecoder
 import os
@@ -29,17 +28,24 @@ class MetarSimpleSite(object):
         self.__timezone__ = tz
 
 class MetarSite(MetarSimpleSite):
-    """May be able to set the timezone off the constructor if we're able to build a databse of metar sites and their appropriate timezones"""
+    """[ID, name,State , Country(optional),Lat ,Lon ]"""
     def __init__(self, idProfile):
         MetarSimpleSite.__init__(self, [idProfile[0], idProfile[4], idProfile[5], None])
         self.id =idProfile[0]
-        self.__stateProv__ = idProfile[0]
+        self.__stateProv__ = idProfile[2]
         self.__name__ = idProfile[1]
         self.codedMetar = 0
         self.obCurrent = []
         self.__codedobHistory__ = [None]*24
         self.__decodedobHistory__ = [[None] * 15]*24
-    """This is where the metar is set.  We want a datetime string to move through here as well"""
+
+    def distanceFrom(self,llconvert,  otherSite):
+        distance =  llconvert.distance(otherSite.getLatitude(),otherSite.getLongitude(),
+                                        self.getLatitude(), self.getLongitude())
+        self.__distance__ = distance
+    """Returns True if this site is closer to a point then the other site"""
+    def __lt__(self, otherSite):
+        return self.__distance__ < otherSite.__distance__
     def __str__(self):
         ret= ("ID: " + self.__id__ +"\n" +
                 "State: " + self.__stateProv__+"\n" +
@@ -49,6 +55,7 @@ class MetarSite(MetarSimpleSite):
         for i in self.__decodedObHistory__:
             ret = ret + str(i)
         return ret
+    """This is where the metar is set.  We want a datetime int to move through here as well"""
     def __setHour__(self, utcHour, obs):
         self.__codedobHistory__[utcHour] = obs
     """Returns a boolean value, True if coded obs exsist in __decodedobHistory, False otherwise."""
