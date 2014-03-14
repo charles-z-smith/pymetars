@@ -1,7 +1,7 @@
-from metars.metar import MetarSite
+from pymetars.metar import MetarSite
 from heapq import heappush, heappop
 import os
-from metars.latlonconversions import LatLonConversions
+from pymetars.latlonconversions import LatLonConversions
 from ftplib import FTP as __FTP__
 from datetime import datetime as __datetime__
 
@@ -11,7 +11,7 @@ class MetarList(object):
         self.__llconvert__ = LatLonConversions()
         self.__metarSites__ = {}
         direc = os.path.dirname(os.path.realpath(__file__))
-        with open(direc + "/" + "metar2.tbl.txt","r") as f:
+        with open(direc + "/" + "metar.tbl.txt","r") as f:
             data = f.readlines()
             f.close()
             for i in data:

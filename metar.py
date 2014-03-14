@@ -1,5 +1,5 @@
 from datetime import datetime
-import metars.metardecoder as metardecoder
+import pymetars.metardecoder as metardecoder
 import os
 import re
 from pytz import timezone

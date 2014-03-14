@@ -1,4 +1,4 @@
-from metars import metarlist
+from pymetars import metarlist
 from datetime import datetime
 import os
 """Will changes this to unit tests in the future"""
@@ -69,13 +69,13 @@ def testDistance():
     sites = lst.findClosestSites(kmsn, 1)
     assert("KC29" in sites)
 
-##testMetarList()
-##testMetarListLoad()
-##testGetBounded()
-##testRemoveEmpty()
-##testNone()
-##testOne()
-##testDownloadCurrent()
-##testLoadCurrent()
-##testDownloadCycle()
+testMetarList()
+testMetarListLoad()
+testGetBounded()
+testRemoveEmpty()
+testNone()
+testOne()
+testDownloadCurrent()
+testLoadCurrent()
+testDownloadCycle()
 testDistance()
